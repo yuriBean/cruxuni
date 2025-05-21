@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import questions from "../data/questions";
+import { collection, getDocs } from "firebase/firestore";  
+import { db } from "../firebase";
 const TestPage = () => {
 const { state } = useLocation();
 const navigate = useNavigate();
 const { testType, duration } = state || {};
+const [questions, setQuestions] = useState([]);
+
 const testQuestions = questions[testType.toLowerCase()] || [];
 const [timeLeft, setTimeLeft] = useState(duration);
 const [currentIndex, setCurrentIndex] = useState(0);
@@ -13,8 +17,7 @@ const [answers, setAnswers] = useState({}); // locked
 const [skipped, setSkipped] = useState([]);
 const [reviewingSkipped, setReviewingSkipped] = useState(false);
 // Timer
-const [questions, setQuestions] = useState([]);
-const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(false);
 
 useEffect(() => {
     if (!state?.testType) {
